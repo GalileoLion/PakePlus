@@ -2,463 +2,70 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>人际关系管理</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #4a6bdf;
-            --secondary-color: #f5f7fa;
-            --text-color: #333;
-            --light-text: #777;
-            --border-color: #e1e4e8;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            color: var(--text-color);
-            background-color: #f9f9f9;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        /* 顶栏导航 */
-        .nav-container {
-            width: 100%;
-            overflow-x: auto;
-            padding: 10px 0;
-            margin-bottom: 20px;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .friends-nav {
-            display: flex;
-            gap: 15px;
-            padding: 0 10px;
-        }
-        
-        .friend-nav-item {
-            flex: 0 0 auto;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--secondary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid transparent;
-        }
-        
-        .friend-nav-item:hover {
-            transform: scale(1.05);
-        }
-        
-        .friend-nav-item.active {
-            border-color: var(--primary-color);
-            transform: scale(1.1);
-        }
-        
-        .add-friend-btn {
-            flex: 0 0 auto;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            margin-left: 5px;
-        }
-        
-        .add-friend-btn:hover {
-            transform: scale(1.1);
-        }
-        
-        /* 好友卡片 */
-        .friend-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 25px;
-            margin-bottom: 30px;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .friend-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .friend-avatar {
-            font-size: 60px;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: var(--secondary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 20px;
-            flex-shrink: 0;
-        }
-        
-        .friend-info {
-            flex-grow: 1;
-        }
-        
-        .friend-name {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        
-        .friend-meta {
-            color: var(--light-text);
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        
-        .tag {
-            background-color: #e0e7ff;
-            color: #4a6bdf;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .tag.work {
-            background-color: #e0f2fe;
-            color: #0369a1;
-        }
-        
-        .tag.family {
-            background-color: #fce7f3;
-            color: #9d174d;
-        }
-        
-        .tag.friend {
-            background-color: #dcfce7;
-            color: #166534;
-        }
-        
-        .tag.hobby {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-        
-        .divider {
-            height: 1px;
-            background-color: var(--border-color);
-            margin: 20px 0;
-        }
-        
-        /* 事件记录 */
-        .events-section h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-        
-        .event-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .event-item {
-            background-color: var(--secondary-color);
-            padding: 15px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        
-        .event-item:hover {
-            transform: translateX(5px);
-        }
-        
-        .event-date {
-            font-size: 12px;
-            color: var(--light-text);
-            margin-bottom: 5px;
-        }
-        
-        .event-content {
-            line-height: 1.5;
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 600px) {
-            .friend-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .friend-avatar {
-                margin-right: 0;
-                margin-bottom: 15px;
-            }
-        }
-        
-        /* 模态框样式 */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            padding: 25px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            animation: modalFadeIn 0.3s ease;
-        }
-        
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--light-text);
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-family: inherit;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-        
-        .emoji-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .emoji-option {
-            font-size: 24px;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            transition: all 0.2s;
-        }
-        
-        .emoji-option:hover {
-            background-color: var(--secondary-color);
-            transform: scale(1.2);
-        }
-        
-        .emoji-option.selected {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .tag-input-container {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        
-        .tag-input {
-            flex-grow: 1;
-        }
-        
-        .add-tag-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 0 12px;
-            cursor: pointer;
-        }
-        
-        .modal-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .modal-tag {
-            background-color: var(--secondary-color);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .remove-tag {
-            margin-left: 5px;
-            cursor: pointer;
-            color: var(--light-text);
-        }
-        
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-        }
-        
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            border: none;
-        }
-        
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-    </style>
+    <link href="styles.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <!-- 顶栏导航 -->
         <div class="nav-container">
-            <div class="friends-nav" id="friendsNav">
-                <!-- 导航项将通过JavaScript动态生成 -->
-            </div>
+            <div class="friends-nav" id="friendsNav"></div>
         </div>
         
-        <!-- 好友卡片 -->
-        <div class="friend-card" id="friendCard">
-            <!-- 内容将通过JavaScript动态生成 -->
-        </div>
+        <div class="friend-card" id="friendCard"></div>
     </div>
     
-    <!-- 添加好友模态框 -->
-    <div class="modal" id="addFriendModal">
+    <div class="modal" id="friendModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">添加新好友</h3>
+                <h3 class="modal-title" id="modalTitle">添加新好友</h3>
                 <button class="close-modal" onclick="closeModal()">×</button>
             </div>
-            <form id="addFriendForm">
-                <div class="form-group">
+            <form id="friendForm">
+                <input type="hidden" id="friendId" name="id">
+                
+                <div class="form-group required">
                     <label for="friendEmoji">选择头像</label>
-                    <div class="emoji-selector" id="emojiSelector">
-                        <div class="emoji-option" data-emoji="👨">👨</div>
-                        <div class="emoji-option" data-emoji="👩">👩</div>
-                        <div class="emoji-option" data-emoji="👴">👴</div>
-                        <div class="emoji-option" data-emoji="👵">👵</div>
-                        <div class="emoji-option" data-emoji="👦">👦</div>
-                        <div class="emoji-option" data-emoji="👧">👧</div>
-                        <div class="emoji-option" data-emoji="🧑">🧑</div>
-                        <div class="emoji-option" data-emoji="👱">👱</div>
-                        <div class="emoji-option" data-emoji="👨‍💻">👨‍💻</div>
-                        <div class="emoji-option" data-emoji="👩‍🍳">👩‍🍳</div>
-                        <div class="emoji-option" data-emoji="🧑‍🎓">🧑‍🎓</div>
-                        <div class="emoji-option" data-emoji="👨‍🎨">👨‍🎨</div>
+                    <div class="emoji-selector-container">
+                        <div class="emoji-selector" id="emojiSelector">
+                            <div class="emoji-option" data-emoji="👨">👨</div>
+                            <div class="emoji-option" data-emoji="👩">👩</div>
+                            <div class="emoji-option" data-emoji="👴">👴</div>
+                            <div class="emoji-option" data-emoji="👵">👵</div>
+                            <div class="emoji-option" data-emoji="👦">👦</div>
+                            <div class="emoji-option" data-emoji="👧">👧</div>
+                        </div>
+                        <div class="emoji-selector">
+                            <div class="emoji-option" data-emoji="🧑">🧑</div>
+                            <div class="emoji-option" data-emoji="👱">👱</div>
+                            <div class="emoji-option" data-emoji="👨‍💻">👨‍💻</div>
+                            <div class="emoji-option" data-emoji="👩‍🍳">👩‍🍳</div>
+                            <div class="emoji-option" data-emoji="🧑‍🎓">🧑‍🎓</div>
+                            <div class="emoji-option" onclick="showCustomEmojiInput(this)">＋</div>
+                        <input type="text" id="customEmojiInput" class="emoji-option-input" 
+                               placeholder="输入emoji" maxlength="2" style="display:none;">
+                        </div>
                     </div>
-                    <input type="hidden" id="friendEmoji" name="emoji" value="👨" required>
+                    <input type="hidden" id="friendEmoji" name="emoji" required>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group required">
                     <label for="friendName">姓名</label>
                     <input type="text" id="friendName" class="form-control" name="name" required>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group required">
                     <label for="friendAge">年龄</label>
                     <input type="number" id="friendAge" class="form-control" name="age" min="1" max="120" required>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group required">
                     <label for="friendRelationship">关系</label>
                     <input type="text" id="friendRelationship" class="form-control" name="relationship" required>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group required">
                     <label for="friendLocation">位置</label>
                     <input type="text" id="friendLocation" class="form-control" name="location" required>
                 </div>
@@ -478,12 +85,12 @@
                     <div class="modal-tags" id="modalTags"></div>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group" id="firstEventGroup">
                     <label for="firstEvent">首次互动记录</label>
-                    <textarea id="firstEvent" class="form-control" name="firstEvent" rows="3" required></textarea>
+                    <textarea id="firstEvent" class="form-control" name="firstEvent" rows="3"></textarea>
                 </div>
                 
-                <div class="modal-footer">
+                <div class="modal-footer" id="modalFooter">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">取消</button>
                     <button type="submit" class="btn btn-primary">保存</button>
                 </div>
@@ -491,277 +98,37 @@
         </div>
     </div>
     
-    <script>
-        // 本地存储键名
-        const STORAGE_KEY = 'relationshipManagerData';
-        
-        // 初始化数据
-        const defaultFriendsData = [
-            {
-                id: 1,
-                emoji: "👨",
-                name: "张伟",
-                age: 32,
-                relationship: "同事",
-                location: "北京",
-                tags: [
-                    { text: "篮球", type: "hobby" },
-                    { text: "技术宅", type: "hobby" },
-                    { text: "咖啡爱好者", type: "hobby" },
-                    { text: "电影迷", type: "hobby" }
-                ],
-                events: [
-                    { date: getCurrentDate(), content: "一起参加了公司组织的篮球比赛，他表现出色拿了MVP。" },
-                    { date: "2023年9月28日", content: "推荐了一部科幻电影《星际穿越》，周末一起观影后讨论了剧情。" },
-                    { date: "2023年8月10日", content: "帮他解决了一个技术难题，他请我喝了咖啡表示感谢。" },
-                    { date: "2023年6月5日", content: "公司团建时发现我们都喜欢打篮球，约好每周三下班后一起打球。" }
-                ]
-            },
-            {
-                id: 2,
-                emoji: "👩",
-                name: "李娜",
-                age: 28,
-                relationship: "大学同学",
-                location: "上海",
-                tags: [
-                    { text: "旅行", type: "hobby" },
-                    { text: "摄影", type: "hobby" },
-                    { text: "美食", type: "hobby" },
-                    { text: "闺蜜", type: "friend" }
-                ],
-                events: [
-                    { date: getCurrentDate(), content: "她刚从日本旅行回来，给我带了抹茶巧克力和精美的明信片。" },
-                    { date: "2023年9月15日", content: "一起庆祝了她的生日，在一家新开的意大利餐厅用餐。" },
-                    { date: "2023年7月22日", content: "周末一起去郊外拍照，她教我使用单反相机的技巧。" },
-                    { date: "2023年5月18日", content: "她帮我修改了简历，给了我很多求职建议。" }
-                ]
-            }
-        ];
-
-        // 当前显示的好友ID
-        let currentFriendId = 1;
-        let friendsData = [];
-        let newTags = [];
-
-        // 初始化页面
-        function initPage() {
-            loadData();
-            renderFriendsNav();
-            renderFriendCard(currentFriendId);
-            setupEmojiSelector();
-        }
-
-        // 从本地存储加载数据
-        function loadData() {
-            const savedData = localStorage.getItem(STORAGE_KEY);
-            if (savedData) {
-                friendsData = JSON.parse(savedData);
-                if (friendsData.length > 0) {
-                    currentFriendId = friendsData[0].id;
-                }
-            } else {
-                friendsData = JSON.parse(JSON.stringify(defaultFriendsData));
-                saveData();
-            }
-        }
-
-        // 保存数据到本地存储
-        function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(friendsData));
-        }
-
-        // 获取当前日期
-        function getCurrentDate() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth() + 1;
-            const day = now.getDate();
-            return `${year}年${month}月${day}日`;
-        }
-
-        // 渲染好友导航栏
-        function renderFriendsNav() {
-            const friendsNav = document.getElementById('friendsNav');
-            friendsNav.innerHTML = '';
-            
-            friendsData.forEach(friend => {
-                const navItem = document.createElement('div');
-                navItem.className = `friend-nav-item ${friend.id === currentFriendId ? 'active' : ''}`;
-                navItem.textContent = friend.emoji;
-                navItem.onclick = () => switchFriend(friend.id);
-                friendsNav.appendChild(navItem);
-            });
-            
-            // 添加"添加好友"按钮
-            const addBtn = document.createElement('button');
-            addBtn.className = 'add-friend-btn';
-            addBtn.textContent = '+';
-            addBtn.onclick = openModal;
-            friendsNav.appendChild(addBtn);
-        }
-
-        // 渲染好友卡片
-        function renderFriendCard(friendId) {
-            const friend = friendsData.find(f => f.id === friendId);
-            if (!friend) return;
-            
-            const friendCard = document.getElementById('friendCard');
-            
-            // 构建标签HTML
-            const tagsHtml = friend.tags.map(tag => 
-                `<span class="tag ${tag.type}">${tag.text}</span>`
-            ).join('');
-            
-            // 构建事件HTML
-            const eventsHtml = friend.events.map(event => `
-                <div class="event-item">
-                    <div class="event-date">${event.date}</div>
-                    <div class="event-content">${event.content}</div>
-                </div>
-            `).join('');
-            
-            // 设置卡片内容
-            friendCard.innerHTML = `
-                <div class="friend-header">
-                    <div class="friend-avatar">${friend.emoji}</div>
-                    <div class="friend-info">
-                        <h1 class="friend-name">${friend.name}</h1>
-                        <div class="friend-meta">${friend.age}岁 · ${friend.relationship} · ${friend.location}</div>
-                        <div class="tags-container">
-                            ${tagsHtml}
-                        </div>
-                    </div>
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="eventModalTitle">互动记录</h3>
+                <button class="close-modal" onclick="closeEventModal()">×</button>
+            </div>
+            <form id="eventForm">
+                <input type="hidden" id="eventFriendId" name="friendId">
+                <input type="hidden" id="eventIndex" name="eventIndex">
+                
+                <div class="form-group required">
+                    <label for="eventDate">日期</label>
+                    <input type="date" id="eventDate" class="form-control" name="date" required>
                 </div>
                 
-                <div class="divider"></div>
-                
-                <div class="events-section">
-                    <h3>近期互动</h3>
-                    <div class="event-list">
-                        ${eventsHtml}
-                    </div>
+                <div class="form-group required">
+                    <label for="eventContent">内容</label>
+                    <textarea id="eventContent" class="form-control" name="content" rows="4" required></textarea>
                 </div>
-            `;
-        }
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="deleteEventBtn" style="display: none;" onclick="deleteEvent()">删除</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEventModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        // 切换好友
-        function switchFriend(friendId) {
-            currentFriendId = friendId;
-            renderFriendsNav();
-            renderFriendCard(friendId);
-        }
-
-        // 设置emoji选择器
-        function setupEmojiSelector() {
-            const emojiOptions = document.querySelectorAll('.emoji-option');
-            emojiOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    // 移除所有选中状态
-                    emojiOptions.forEach(opt => opt.classList.remove('selected'));
-                    // 添加当前选中状态
-                    this.classList.add('selected');
-                    // 更新隐藏输入框的值
-                    document.getElementById('friendEmoji').value = this.getAttribute('data-emoji');
-                });
-            });
-            // 默认选中第一个
-            if (emojiOptions.length > 0) {
-                emojiOptions[0].classList.add('selected');
-            }
-        }
-
-        // 打开添加好友模态框
-        function openModal() {
-            newTags = [];
-            document.getElementById('addFriendForm').reset();
-            document.getElementById('modalTags').innerHTML = '';
-            document.querySelector('.emoji-option').classList.add('selected');
-            document.getElementById('addFriendModal').style.display = 'flex';
-        }
-
-        // 关闭模态框
-        function closeModal() {
-            document.getElementById('addFriendModal').style.display = 'none';
-        }
-
-        // 添加标签
-        function addTag() {
-            const tagInput = document.getElementById('tagInput');
-            const tagType = document.getElementById('tagType').value;
-            const tagText = tagInput.value.trim();
-            
-            if (tagText) {
-                newTags.push({ text: tagText, type: tagType });
-                renderModalTags();
-                tagInput.value = '';
-            }
-        }
-
-        // 渲染模态框中的标签
-        function renderModalTags() {
-            const modalTags = document.getElementById('modalTags');
-            modalTags.innerHTML = '';
-            
-            newTags.forEach((tag, index) => {
-                const tagElement = document.createElement('div');
-                tagElement.className = `modal-tag ${tag.type}`;
-                tagElement.innerHTML = `
-                    ${tag.text}
-                    <span class="remove-tag" onclick="removeTag(${index})">×</span>
-                `;
-                modalTags.appendChild(tagElement);
-            });
-        }
-
-        // 移除标签
-        function removeTag(index) {
-            newTags.splice(index, 1);
-            renderModalTags();
-        }
-
-        // 处理添加好友表单提交
-        document.getElementById('addFriendForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // 获取表单数据
-            const formData = new FormData(this);
-            const emoji = formData.get('emoji');
-            const name = formData.get('name');
-            const age = parseInt(formData.get('age'));
-            const relationship = formData.get('relationship');
-            const location = formData.get('location');
-            const firstEvent = formData.get('firstEvent');
-            
-            // 创建新好友
-            const newFriend = {
-                id: Date.now(), // 使用时间戳作为ID
-                emoji,
-                name,
-                age,
-                relationship,
-                location,
-                tags: [...newTags],
-                events: [
-                    { date: getCurrentDate(), content: firstEvent }
-                ]
-            };
-            
-            // 添加到数据
-            friendsData.unshift(newFriend);
-            saveData();
-            
-            // 切换到新好友
-            currentFriendId = newFriend.id;
-            renderFriendsNav();
-            renderFriendCard(currentFriendId);
-            
-            // 关闭模态框
-            closeModal();
-        });
-
-        // 页面加载时初始化
-        window.onload = initPage;
-    </script>
+    <script src="script.js"></script>
+    <script src="webdav-sync.js"></script>
+    <script src="local-sync.js"></script>
 </body>
 </html>
