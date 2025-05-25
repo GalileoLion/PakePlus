@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>人际关系管理</title>
+    <title>CrossLife 交错人生</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
 </head>
@@ -14,6 +14,7 @@
         </div>
         
         <div class="friend-card" id="friendCard"></div>
+
     </div>
     
     <div class="modal" id="friendModal">
@@ -56,8 +57,8 @@
                 </div>
                 
                 <div class="form-group required">
-                    <label for="friendAge">年龄</label>
-                    <input type="number" id="friendAge" class="form-control" name="age" min="1" max="120" required>
+                    <label for="friendBirthdate">生日</label>
+                    <input type="date" id="friendBirthdate" class="form-control" name="birthdate" required>
                 </div>
                 
                 <div class="form-group required">
@@ -127,8 +128,113 @@
         </div>
     </div>
 
+
+        <!-- 关系图谱模态窗口 -->
+    <div class="modal" id="graphModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">好友关系图谱</h3>
+                <button class="close-modal" onclick="closeGraphModal()">×</button>
+            </div>
+            <div id="relationshipGraphContainer" class="relationship-graph-container"></div>
+        </div>
+    </div>
+
+    <!-- 脚本加载有先后顺序 -->
+    <script src="settings.js"></script>
+    <script src="emotion/emotion-core.js"></script>
+
     <script src="script.js"></script>
-    <script src="webdav-sync.js"></script>
+
     <script src="local-sync.js"></script>
+
+    <!-- 添加关系图谱相关脚本 -->
+    <script src="bubble/d3.v7.min.js"></script>
+    <script src="bubble/relationship-graph.js"></script>
+
+   <!-- 调试脚本 -->
+   <script>
+    // 在页面加载完成后执行的调试函数
+    window.addEventListener('DOMContentLoaded', function() {
+        // 延迟3秒执行，确保其他脚本都已加载
+        setTimeout(function() {
+            console.log('调试信息:');
+            console.log('- EmotionAnalyzer 已加载:', typeof window.EmotionAnalyzer !== 'undefined');
+            console.log('- AppSettings 已加载:', typeof window.AppSettings !== 'undefined');
+            console.log('- recalculateEmotion 已定义:', typeof window.recalculateEmotion === 'function');
+            console.log('- friendsData 已加载:', typeof window.friendsData !== 'undefined');
+            
+            if (window.AppSettings && window.AppSettings.settings) {
+                console.log('- AppSettings配置:', {
+                    apiKey: window.AppSettings.settings.apiKey ? '已设置' : '未设置',
+                    useEmotionAnalysis: window.AppSettings.settings.useEmotionAnalysis,
+                    useApiForAnalysis: window.AppSettings.settings.useApiForAnalysis,
+                    autoAnalyzeEvents: window.AppSettings.settings.autoAnalyzeEvents
+                });
+            }
+            
+            // 检查当前状态并尝试修复
+            if (typeof window.EmotionAnalyzer !== 'undefined' && 
+                typeof window.AppSettings !== 'undefined' && 
+                window.AppSettings.settings && 
+                window.AppSettings.settings.apiKey) {
+                console.log('尝试手动更新API密钥');
+                window.EmotionAnalyzer.updateApiKey(window.AppSettings.settings.apiKey);
+            }
+        }, 3000);
+    });
+</script>
+<script>
+    // 修复全局变量问题的脚本
+    (function() {
+        window.addEventListener('load', function() {
+            // 延迟1秒执行，确保其他脚本都已初始化
+            setTimeout(function() {
+                console.log('执行全局变量修复脚本');
+                
+                // 1. 确保AppSettings全局可用
+                if (typeof AppSettings !== 'undefined' && !window.AppSettings) {
+                    window.AppSettings = AppSettings;
+                    console.log('已修复window.AppSettings');
+                }
+                
+                // 2. 确保friendsData全局可用
+                if (typeof friendsData !== 'undefined' && !window.friendsData) {
+                    window.friendsData = friendsData;
+                    console.log('已修复window.friendsData');
+                }
+                
+                // 3. 尝试更新EmotionAnalyzer的API密钥
+                if (window.EmotionAnalyzer && window.AppSettings && window.AppSettings.settings) {
+                    const apiKey = window.AppSettings.settings.apiKey || "";
+                    window.EmotionAnalyzer.updateApiKey(apiKey);
+                    console.log('已更新EmotionAnalyzer的API密钥，长度:', apiKey ? apiKey.length : 0);
+                }
+                
+                // 4. 尝试修复recalculateEmotion的行为
+                if (typeof window.recalculateEmotion === 'function') {
+                    const originalFn = window.recalculateEmotion;
+                    
+                    window.recalculateEmotion = function(friendId, eventIndex) {
+                        console.log('增强版recalculateEmotion被调用:', friendId, eventIndex);
+                        
+                        // 确保friendsData可用
+                        if (!window.friendsData && typeof friendsData !== 'undefined') {
+                            window.friendsData = friendsData;
+                            console.log('临时修复: 已导出friendsData到全局');
+                        }
+                        
+                        // 调用原始函数
+                        originalFn(friendId, eventIndex);
+                    };
+                    
+                    console.log('已增强recalculateEmotion函数');
+                }
+            }, 1000);
+        });
+    })();
+</script>
+
+<button id="settingsBtn" onclick="AppSettings.openSettingsPanel()">⚙️</button>
 </body>
 </html>
