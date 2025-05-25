@@ -59,9 +59,19 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    cursor: pointer;
+    cursor: grab;
     transition: all 0.2s;
     border: 2px solid transparent;
+}
+
+.friend-nav-item.dragging {
+    opacity: 0.6;
+    transform: scale(1.1);
+    cursor: grabbing;
+}
+
+.friend-nav-item.drag-over {
+    border: 2px dashed #4a90e2;
 }
 
 .friend-nav-item:hover {
@@ -102,6 +112,35 @@ body {
     margin-bottom: 20px;
     animation: fadeIn 0.3s ease;
     position: relative;
+}
+
+/* Add these styles to the end of your styles.css file */
+
+/* Create a chat bubble effect with triangle pointer */
+.friend-card {
+    position: relative; /* Ensure position is set for absolute positioning of the triangle */
+}
+
+.friend-card::before {
+    content: "";
+    position: absolute;
+    top: -15px; /* Position above the card */
+    left: var(--triangle-position, 40px); /* Dynamic position based on active friend */
+    transform: translateX(-50%); /* Center the triangle on the calculated position */
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid white; /* White triangle matching card background */
+    filter: drop-shadow(0 -2px 3px rgba(0, 0, 0, 0.07)); /* Matching shadow for the triangle */
+    z-index: 1; /* Ensure it appears above other elements if needed */
+    transition: left 0.3s ease; /* Smooth transition when position changes */
+}
+
+/* Ensure Add Friend button appears first in the nav bar */
+.add-friend-btn {
+    order: -1; /* Force it to appear first in flex layout */
+    margin:0 5px;/* 视觉效果上和谐，加点边距 */
 }
 
 @keyframes fadeIn {
@@ -330,6 +369,134 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+}
+
+/* 关系图谱按钮样式 */
+.events-actions {
+    display: flex;
+    align-items: center;
+}
+
+.graph-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 5px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+
+}
+
+.graph-btn:hover {
+    transform: scale(1.1);
+}
+
+/* 全屏关系图谱模态窗口 */
+#graphModal .modal-content {
+    max-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    padding: 20px;
+    margin: 0;
+}
+
+#graphModal .relationship-graph-container {
+    height: calc(100vh - 180px); /* 减去模态窗口的padding和标题栏高度 */
+}
+
+
+
+
+
+
+/* 卡片操作按钮容器 */
+.card-action-buttons {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    display: flex;
+    gap: 10px;
+}
+
+/* 模式切换按钮样式 */
+.mode-toggle-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 8px 16px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    z-index: 10;
+}
+
+.mode-toggle-btn:hover {
+    background-color: #3679c7;
+}
+
+/* 关系图谱容器样式 */
+.relationship-graph-container {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 60px);
+    background-color: #f5f6fa;
+    overflow: hidden;
+}
+
+/* 画布样式 */
+.relationship-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: default;
+}
+
+/* 关系编辑框样式 */
+.relation-edit-input {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #4a90e2;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    outline: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    z-index: 100;
+    text-align: center;
+    font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+}
+
+/* 关系标签样式 */
+.relation-label {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.6);/* 最后一位是透明度 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 12px;
+    text-align: center;
+    pointer-events: none; /* 默认不响应鼠标事件 */
+    z-index: 5;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.relation-label:focus {
+    outline: none;
+    border-color: #4a90e2;
+    background-color: #fff;
+    box-shadow: 0 0 3px rgba(74, 144, 226, 0.5);
 }
 
 .modal {
@@ -649,6 +816,31 @@ body {
         font-size: 11px;
     }
 
+}
+
+/* 浮动设置按钮样式 */
+#settingsBtn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.2s ease;
+}
+
+#settingsBtn:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.1);
 }
 
 @media (max-width: 360px) {
